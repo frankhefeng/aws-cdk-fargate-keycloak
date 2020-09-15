@@ -5,12 +5,12 @@ import { KeycloakStack } from '../lib/keycloak-stack';
 
 if (!process.env.domainName) {
     console.error("please define domainName envionment variable!! \nRUN:")
-    console.error("domainName=mydomain.com cdk deploy \nOR \ndomainName=mydomain.com subDomainName=blog cdk deploy ")
+    console.error("domainName=mydomain.com cdk deploy \nOR \ndomainName=mydomain.com subDomainName=auth cdk deploy ")
     process.exit(1)
 }
 
 const app = new cdk.App();
-new KeycloakStack(app, 'KeycloakStack', {
+new KeycloakStack(app, 'DemoKeycloakStack', {
     env: {
         account: process.env.CDK_DEFAULT_ACCOUNT,
         region: process.env.CDK_DEFAULT_REGION,
