@@ -103,7 +103,7 @@ export class KeycloakStack extends cdk.Stack {
         },
         containerPort: 8080,
       },
-      memoryLimitMiB: 512,
+      memoryLimitMiB: 1024,
       cpu: 256,
       desiredCount: 1,
       publicLoadBalancer: true,
