@@ -79,7 +79,7 @@ export class KeycloakStack extends cdk.Stack {
     const fargateService = new ecs_patterns.ApplicationLoadBalancedFargateService(this, "KeycloakService", {
       cluster,
       taskImageOptions: {
-        image: ecs.ContainerImage.fromRegistry('jboss/keycloak:9.0.3'),
+        image: ecs.ContainerImage.fromRegistry('jboss/keycloak:11.0.2'),
         enableLogging: true,
         logDriver: new ecs.AwsLogDriver({
           streamPrefix: 'keycloak',
@@ -97,7 +97,9 @@ export class KeycloakStack extends cdk.Stack {
           'DB_DATABASE': 'keycloak',
           'KEYCLOAK_USER': 'admin',
           'PROXY_ADDRESS_FORWARDING': 'true',
+          'JDBC_PARAMS': 'useSSL=false',
           // 'KEYCLOAK_LOGLEVEL': 'DEBUG',
+          // 'ROOT_LOGLEVEL': 'DEBUG',
         },
         containerPort: 8080,
       },
