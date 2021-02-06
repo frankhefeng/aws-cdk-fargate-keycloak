@@ -30,43 +30,40 @@ export class KeycloakStack extends cdk.Stack {
       vpc: vpc
     })
 
-    const fargateLogGroup = new logs.LogGroup(this, 'LogGroup', {
-      logGroupName: 'KeycloakFargate',
+    const fargateLogGroup = new logs.LogGroup(this, 'DemoKeycloakFargateLogGroup', {
+      logGroupName: 'DemoKeycloakFargate',
       retention: logs.RetentionDays.ONE_WEEK,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
     });
 
-    const taskRole = new iam.Role(this, 'KeycloakFargateTaskRole', {
-      roleName: 'KeycloakFargateTaskRole',
+    const taskRole = new iam.Role(this, 'DemoKeycloakFargateTaskRole', {
+      roleName: 'DemoKeycloakFargateTaskRole',
       assumedBy: new iam.ServicePrincipal('ecs-tasks.amazonaws.com')
     });
 
-    const dbSecret = new secretsmanager.Secret(this, 'KeycloakDBSecret', {
-      secretName: "KeycloakDBPassword",
+    const dbSecret = new secretsmanager.Secret(this, 'DemoKeycloakDBSecret', {
+      secretName: "DemoKeycloakDBPassword",
       generateSecretString: {
         excludePunctuation: true
       }
     });
+
     const keycloakUser = 'admin'
-    const keycloakSecret = new secretsmanager.Secret(this, 'KeycloakAdminSecret', {
-      secretName: "KeycloakAdminPassword",
+    const keycloakSecret = new secretsmanager.Secret(this, 'DemoKeycloakAdminSecret', {
+      secretName: "DemoKeycloakAdminPassword",
       generateSecretString: {
         excludePunctuation: true
       }
     });
-    const db = new rds.DatabaseCluster(this, 'Database', {
+    const db = new rds.DatabaseCluster(this, 'DemoKeycloakDatabase', {
       engine: rds.DatabaseClusterEngine.AURORA,
       defaultDatabaseName: 'keycloak',
-      masterUser: {
-        username: 'keycloak',
-        password: dbSecret.secretValue
-      },
+      credentials: rds.Credentials.fromPassword('keycloak', dbSecret.secretValue),
       instanceProps: {
         instanceType: ec2.InstanceType.of(ec2.InstanceClass.BURSTABLE3, ec2.InstanceSize.SMALL),
         vpc: vpc
       }
     });
-
     const hostedZone = route53.HostedZone.fromLookup(this, 'HostedZone', {
       domainName: props.domainName
     });
@@ -79,7 +76,7 @@ export class KeycloakStack extends cdk.Stack {
     const fargateService = new ecs_patterns.ApplicationLoadBalancedFargateService(this, "KeycloakService", {
       cluster,
       taskImageOptions: {
-        image: ecs.ContainerImage.fromRegistry('jboss/keycloak:11.0.2'),
+        image: ecs.ContainerImage.fromRegistry('jboss/keycloak:12.0.2'),
         enableLogging: true,
         logDriver: new ecs.AwsLogDriver({
           streamPrefix: 'keycloak',
@@ -126,7 +123,7 @@ export class KeycloakStack extends cdk.Stack {
 
     new cdk.CfnOutput(this, 'Keycloak ADMIN username', { value: `${keycloakUser}` })
     new cdk.CfnOutput(this, 'Keycloak ADMIN password', {
-      value: `Please retrive it from AWS Secrets Manager > Secrets > KeycloakAdminPassword`
+      value: `Please retrive it from AWS Secrets Manager > Secrets > DemoKeycloakAdminPassword`
     })
   }
 }
