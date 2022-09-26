@@ -14,7 +14,7 @@
     "@aws-cdk/assert": "1.104.0",
     "@types/jest": "^26.0.23",
     "@types/node": "15.3.0",
-    "aws-cdk": "1.104.0",
+    "aws-cdk": "1.174.0",
     "jest": "^26.6.3",
     "ts-jest": "^26.5.6",
     "ts-node": "^9.1.1",
@@ -31,7 +31,7 @@
     "@aws-cdk/aws-s3": "^1.104.0",
     "@aws-cdk/aws-secretsmanager": "^1.104.0",
     "@aws-cdk/core": "1.104.0",
-    "cdk": "^1.104.0",
+    "cdk": "^1.174.0",
     "source-map-support": "^0.5.19"
   }
 }
